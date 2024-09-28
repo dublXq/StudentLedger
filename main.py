@@ -79,7 +79,7 @@ class Main(student_manager.SaveDictStudent):
                 create_profile_student.create_student(id_student, fio)
             case "2":
                 if show_table_student.short_show_table_students() is not False:
-                    print("Выберете студента для присваивания ему оценки")
+                    print("Выберете студента для присваивания ему оценки\n")
                     value_choice = input("Ввод: ")
                     if student_manager.checking_val_in_db(value_choice):
                         add_score.add_score_method(value_choice)

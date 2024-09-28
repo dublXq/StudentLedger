@@ -14,13 +14,13 @@
 def checking_val_in_db(value):
     save_dict = SaveDictStudent()
     if value.isdigit():
-        if int(value) <= len(save_dict.db_id_to_fio):
-            return True
-        else:
-            print("\n-----------------------------------------------\n"
+        for i in save_dict.db_id_to_fio.keys():
+            if value == i:
+                return True
+        print("\n-----------------------------------------------\n"
                   "Ошибка: Введите ID студента, который есть в БД\n"
                   "-----------------------------------------------")
-            return False
+        return False
     else:
         print("\n---------------------------------------------\n"
               "Ошибка: Введена строка. Ожидался ID студента\n"
@@ -190,6 +190,7 @@ class CalculateAverageScore(SaveDictStudent):
         # Записываем значение (оценки), в виде строки
         time_score = self.db_fio_to_subjects[time_fio]
         self.new_list = time_score.split("\n")
+        self.new_list = list(filter(lambda x: len(x) >= 1, self.new_list))
         self.v = " ".join(self.new_list)
         self.new_list = self.v.split(" ")
         self.v = 0
@@ -201,6 +202,8 @@ class CalculateAverageScore(SaveDictStudent):
                 self.plus += int(item)
                 self.v += 1
         print(f"Средний балл студента -> {self.plus / self.v}")
+        self.v = None
+        self.plus = 0
 
 
 class ShowTableStudent(SaveDictStudent):
@@ -217,12 +220,15 @@ class ShowTableStudent(SaveDictStudent):
             return False
 
     def all_show_table_students(self):
+        calculates = CalculateAverageScore()
         if len(self.db_id_to_fio) >= 1:
             for key, items in self.db_id_to_fio.items():
                 print(f"\n----------------------------------------\n"
-                      f"   | ID: {key} | ФИО: {items[0]}\n"
+                      f" | ID: {key} | ФИО: {items[0]}\n"
                       f"----------------------------------------\n")
+
                 for item in self.db_fio_to_subjects.values():
+                    calculates.calculate(key)
                     print(f"----------------------------------------\n"
                           f"\n{item}\n"
                           f"----------------------------------------")
